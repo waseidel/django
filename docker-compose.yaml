@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  db_mongo:
+    image: mongo
+    container_name: mongo_db
+    volumes:
+      - ./docker/mongo_db:/data/db
+    networks:
+      - django
+  
+  django_app:
+    build: .
+    container_name: django_app
+    volumes:
+      - static:/code/static
+      - .:/code
+    depends_on:
+      - db_mongo
+    networks:
+      - django
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports: 
+      - 8000:80
+    volumes: 
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d/
+      - static:/code/static
+    depends_on: 
+      - django_app
+    networks:
+      - django
+
+volumes:
+  static:
+
+networks:
+  django:
