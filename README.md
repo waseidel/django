@@ -1,1 +1,1 @@
-# PuntualidadImport for SITM Mio
+# Docker composer configurado para Python Django
